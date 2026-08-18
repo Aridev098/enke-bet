@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casino Enkies - Juegos Online y Entretenimiento</title>
+  
+  <!-- Script Principal de Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9987094435031407" crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #f59e0b;
+      --accent-hover: #d97706;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text); padding: 20px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+
+    header { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--card-bg); border-radius: 12px; margin-bottom: 25px; border: 1px solid #334155; }
+    .logo { font-size: 1.5rem; font-weight: bold; color: var(--accent); }
+    .user-stats { display: flex; gap: 20px; align-items: center; font-weight: 600; }
+    .enkies-badge { background: #3b82f6; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; }
+
+    main { width: 100%; max-width: 1000px; flex: 1; }
+    .section-title { margin-bottom: 15px; font-size: 1.3rem; border-left: 4px solid var(--accent); padding-left: 10px; }
+
+    /* Grid de Juegos */
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
+    .game-card { background: var(--card-bg); border-radius: 12px; padding: 20px; text-align: center; border: 1px solid #334155; transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
+    .game-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+    .game-icon { font-size: 3rem; margin-bottom: 10px; }
+    .game-title { font-weight: bold; margin-bottom: 8px; }
+    .btn-play { background: var(--accent); color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+    .btn-play:hover { background: var(--accent-hover); }
+
+    /* Banners AdSense */
+    .adslot-container { width: 100%; max-width: 1000px; margin: 25px 0; text-align: center; background: rgba(255,255,255,0.02); border-radius: 8px; min-height: 90px; display: flex; align-items: center; justify-content: center; }
+    .adsbygoogle { display: block; width: 100%; }
+
+    /* Secciones de Contenido SEO e Información */
+    .info-section { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 25px; line-height: 1.6; }
+    .info-section h3 { color: var(--accent); margin-bottom: 12px; }
+    .info-section p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 15px; }
+
+    /* Modales y Overlays */
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+    .hidden { display: none !important; }
+    .modal { background: var(--card-bg); padding: 30px; border-radius: 16px; width: 90%; max-width: 500px; border: 1px solid #334155; position: relative; max-height: 90vh; overflow-y: auto; }
+    .close-btn { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+    
+    .mode-buttons { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+    .btn-mode { background: #334155; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+    .btn-mode:hover { background: #475569; }
+
+    .join-input-group { display: flex; gap: 10px; margin-top: 10px; }
+    .join-input-group input { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; text-transform: uppercase; text-align: center; font-weight: bold; letter-spacing: 2px; }
+
+    /* Lobby Multijugador */
+    .room-code-display { background: #0f172a; padding: 15px; border-radius: 8px; text-align: center; font-size: 1.8rem; font-weight: bold; letter-spacing: 4px; color: var(--accent); margin: 15px 0; border: 1px dashed var(--accent); }
+    .slots-container { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+    .slot { background: #0f172a; padding: 10px 15px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
+    .slot.empty { color: var(--text-muted); font-style: italic; border-style: dashed; }
+
+    footer { margin-top: auto; padding: 20px; text-align: center; color: var(--text-muted); font-size: 0.85rem; width: 100%; max-width: 1000px; }
+    footer a { color: var(--accent); text-decoration: none; margin: 0 10px; cursor: pointer; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado -->
+  <header>
+    <div class="logo">🎰 Casino Enkies</div>
+    <div class="user-stats">
+      <span id="userName">Jugador</span>
+      <div class="enkies-badge">💰 <span id="userEnkies">1,000</span> Enkies</div>
+    </div>
+  </header>
+
+  <main>
+    <h2 class="section-title">Selecciona un Juego</h2>
+    
+    <div class="games-grid">
+      <div class="game-card" onclick="openModeSelect('bj', 'Blackjack 21')">
+        <div class="game-icon">🃏</div>
+        <div class="game-title">Blackjack 21</div>
+        <p style="font-size:0.8rem; color:var(--text-muted);">Consigue 21 sin pasarte.</p>
+        <button class="btn-play">Jugar</button>
+      </div>
+
+      <div class="game-card" onclick="openModeSelect('roulette', 'Ruleta')">
+        <div class="game-icon">🎡</div>
+        <div class="game-title">La Ruleta</div>
+        <p style="font-size:0.8rem; color:var(--text-muted);">Apuesta al color o número.</p>
+        <button class="btn-play">Jugar</button>
+      </div>
+
+      <div class="game-card" onclick="openModeSelect('slots', 'Tragaperras')">
+        <div class="game-icon">🎰</div>
+        <div class="game-title">Tragaperras</div>
+        <p style="font-size:0.8rem; color:var(--text-muted);">Haz coincidir los símbolos.</p>
+        <button class="btn-play">Jugar</button>
+      </div>
+    </div>
+
+    <!-- BANNER ADSENSE 1 (EnkeBet) -->
+    <div class="adslot-container">
+      <!-- EnkeBet -->
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-9987094435031407"
+           data-ad-slot="2902021118"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- SECCIÓN DE CONTENIDO PARA REVISIÓN DE ADSENSE -->
+    <section class="info-section">
+      <h3>¿Qué es Casino Enkies?</h3>
+      <p>
+        Bienvenido a Casino Enkies, una plataforma de entretenimiento virtual donde puedes disfrutar de juegos clásicos de mesa y simulaciones de casino de forma totalmente gratuita. Nuestro objetivo es ofrecer una experiencia divertida, segura y competitiva sin la necesidad de arriesgar dinero real.
+      </p>
+
+      <h3>Reglas de los Juegos y Funcionamiento</h3>
+      <p>
+        <strong>Blackjack 21:</strong> El objetivo principal es sumar un valor lo más cercano posible a 21 con tus cartas sin sobrepasarlo. Compite contra la banca o reta a tus amigos en salas personalizadas.
+      </p>
+      <p>
+        <strong>La Ruleta:</strong> Elige tus números de la suerte, apuesta por colores (rojo o negro) o selecciona par/impar. La ruleta girará y determinará los multiplicadores de tus Enkies apostados.
+      </p>
+      <p>
+        <strong>Sistema de Moneda Virtual (Enkies):</strong> Los Enkies son tokens digitales de juego no canjeables por dinero real. Todos los jugadores comienzan con un saldo inicial y pueden aumentar sus puntos ganando partidas en solitario o en salas multijugador en tiempo real.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- BANNER ADSENSE 2 (Pie de página - EnkeBet) -->
+  <div class="adslot-container">
+    <!-- EnkeBet -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-9987094435031407"
+         data-ad-slot="2902021118"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Casino Enkies. Plataforma de simulaciones sin dinero real.</p>
+    <p style="margin-top: 8px;">
+      <a onclick="showLegal('privacy')">Política de Privacidad</a> | 
+      <a onclick="showLegal('terms')">Términos y Condiciones</a> | 
+      <a onclick="showLegal('responsible')">Juego Responsable</a>
+    </p>
+  </footer>
+
+  <!-- OVERLAY 1: Selección de Modo -->
+  <div id="modeOverlay" class="overlay hidden">
+    <div class="modal">
+      <button class="close-btn" onclick="closeModals()">✕</button>
+      <h3 id="modalGameTitle">Selecciona Modo</h3>
+      
+      <div class="mode-buttons">
+        <button class="btn-mode" onclick="startLocalGame()">👤 Solo (Contra la IA)</button>
+        <button class="btn-mode" onclick="createRoom()" style="background: #2563eb;">👑 Crear Sala Multijugador</button>
+        
+        <div style="margin-top: 10px; border-top: 1px solid #334155; padding-top: 10px;">
+          <label style="font-size:0.85rem; color:var(--text-muted);">Unirse a sala con código:</label>
+          <div class="join-input-group">
+            <input type="text" id="joinCodeInput" placeholder="CÓDIGO" maxlength="6">
+            <button class="btn-mode" onclick="joinRoom()" style="background: #10b981;">Unirse</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY 2: Lobby Multijugador -->
+  <div id="lobbyOverlay" class="overlay hidden">
+    <div class="modal">
+      <button class="close-btn" onclick="closeModals()">✕</button>
+      <h3>Sala de Espera</h3>
+      <p style="font-size:0.85rem; color:var(--text-muted);" id="lobbyGame">Juego</p>
+      
+      <div class="room-code-display" id="lobbyCode">------</div>
+      <p style="font-size: 0.8rem; text-align: center; color: var(--text-muted);">Comparte este código con tus amigos</p>
+
+      <div class="slots-container" id="slotsContainer"></div>
+
+      <button id="btnStartGame" class="btn-play" style="padding: 12px;" onclick="launchMultiplayerGame()">Empezar Partida</button>
+    </div>
+  </div>
+
+  <!-- OVERLAY 3: Área de Juego -->
+  <div id="gameOverlay" class="overlay hidden">
+    <div class="modal" style="max-width: 600px; text-align: center;">
+      <button class="close-btn" onclick="closeModals()">✕</button>
+      <h2 id="activeGameTitle" style="color: var(--accent); margin-bottom: 15px;">Mesa de Juego</h2>
+      
+      <div id="gameCanvas" style="background: #0f172a; padding: 40px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 20px;">
+        <p style="font-size: 1.2rem;">Partida en curso...</p>
+      </div>
+
+      <button class="btn-mode" onclick="closeModals()">Salir al Menú</button>
+    </div>
+  </div>
+
+  <!-- OVERLAY 4: Ventana Modal Legal (Obligatorio para AdSense) -->
+  <div id="legalOverlay" class="overlay hidden">
+    <div class="modal">
+      <button class="close-btn" onclick="closeModals()">✕</button>
+      <h3 id="legalTitle" style="color:var(--accent); margin-bottom:15px;">Aviso Legal</h3>
+      <div id="legalContent" style="color:var(--text-muted); font-size:0.9rem; line-height:1.5;"></div>
+    </div>
+  </div>
+
+  <script>
+    let myName = "Jugador_" + Math.floor(Math.random() * 899 + 100);
+    let currentGame = null;
+    let wsRoom = null;
+    let ws = null;
+    const WS_URL = "wss://echo.websocket.org";
+
+    document.getElementById('userName').textContent = myName;
+
+    function generateRoomCode() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let code = '';
+      for (let i = 0; i < 6; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return code;
+    }
+
+    function openModeSelect(gameId, gameName) {
+      currentGame = { id: gameId, name: gameName };
+      document.getElementById('modalGameTitle').textContent = gameName;
+      show('modeOverlay');
+    }
+
+    function createRoom() {
+      hide('modeOverlay');
+      const localCode = generateRoomCode();
+      
+      wsRoom = { 
+        code: localCode, 
+        playerId: 'host_' + Math.floor(Math.random() * 8999 + 1000), 
+        isHost: true, 
+        players: [{ name: myName + ' (Tú)', isHost: true }] 
+      };
+
+      document.getElementById('lobbyGame').textContent = currentGame.name;
+      document.getElementById('lobbyCode').textContent = localCode;
+      
+      renderLobbySlots();
+      show('lobbyOverlay');
+
+      ensureSocket(() => {
+        try {
+          ws.send(JSON.stringify({ type: 'create', game: currentGame.id, name: myName, code: localCode }));
+        } catch(e) {}
+      });
+    }
+
+    function joinRoom() {
+      const codeInput = document.getElementById('joinCodeInput').value.trim().toUpperCase();
+      if (codeInput.length !== 6) {
+        alert("Introduce un código de 6 caracteres.");
+        return;
+      }
+
+      hide('modeOverlay');
+      wsRoom = {
+        code: codeInput,
+        playerId: 'guest_' + Math.floor(Math.random() * 8999 + 1000),
+        isHost: false,
+        players: [
+          { name: 'Anfitrión', isHost: true },
+          { name: myName + ' (Tú)', isHost: false }
+        ]
+      };
+
+      document.getElementById('lobbyGame').textContent = currentGame.name;
+      document.getElementById('lobbyCode').textContent = codeInput;
+      document.getElementById('btnStartGame').style.display = 'none';
+      
+      renderLobbySlots();
+      show('lobbyOverlay');
+    }
+
+    function renderLobbySlots() {
+      const container = document.getElementById('slotsContainer');
+      container.innerHTML = '';
+      for (let i = 0; i < 4; i++) {
+        const p = wsRoom.players[i];
+        const slotDiv = document.createElement('div');
+        if (p) {
+          slotDiv.className = 'slot';
+          slotDiv.innerHTML = `<span>${p.isHost ? '👑 ' : '👤 '}${p.name}</span> <span style="color:#10b981; font-size:0.8rem;">Listo</span>`;
+        } else {
+          slotDiv.className = 'slot empty';
+          slotDiv.innerHTML = `<span>Espacio libre...</span>`;
+        }
+        container.appendChild(slotDiv);
+      }
+    }
+
+    function startLocalGame() {
+      hide('modeOverlay');
+      document.getElementById('activeGameTitle').textContent = currentGame.name + " (Modo Solitario)";
+      document.getElementById('gameCanvas').innerHTML = `<p>¡Partida iniciada! Apostando en <strong>${currentGame.name}</strong>.</p>`;
+      show('gameOverlay');
+    }
+
+    function launchMultiplayerGame() {
+      hide('lobbyOverlay');
+      document.getElementById('activeGameTitle').textContent = currentGame.name + " (Multijugador)";
+      document.getElementById('gameCanvas').innerHTML = `<p>Partida Multijugador iniciada en la Sala <strong>${wsRoom.code}</strong>.</p>`;
+      show('gameOverlay');
+    }
+
+    function ensureSocket(callback) {
+      if (ws && ws.readyState === WebSocket.OPEN) { callback(); return; }
+      try {
+        ws = new WebSocket(WS_URL);
+        ws.onopen = () => callback();
+      } catch(e) {}
+    }
+
+    function showLegal(type) {
+      const title = document.getElementById('legalTitle');
+      const content = document.getElementById('legalContent');
+      
+      if(type === 'privacy') {
+        title.textContent = "Política de Privacidad";
+        content.innerHTML = "<p>Utilizamos cookies de terceros a través de Google AdSense para personalizar anuncios y analizar el tráfico de nuestra web. No recopilamos ni vendemos información personal. Al usar este sitio web, aceptas el uso de cookies según las normativas de privacidad internacionales.</p>";
+      } else if(type === 'terms') {
+        title.textContent = "Términos y Condiciones";
+        content.innerHTML = "<p>Casino Enkies es un sitio de simulación exclusivamente para entretenimiento. La moneda virtual 'Enkies' no tiene ningún valor en el mundo real y no se puede reembolsar ni convertir en dinero en efectivo.</p>";
+      } else {
+        title.textContent = "Juego Responsable";
+        content.innerHTML = "<p>Promovemos la diversión responsable. Nuestros juegos son totalmente gratuitos y no involucran ningún tipo de apuesta con dinero real. Si sientes que pasas demasiado tiempo jugando, te recomendamos hacer pausas periódicas.</p>";
+      }
+      show('legalOverlay');
+    }
+
+    function show(id) { document.getElementById(id).classList.remove('hidden'); }
+    function hide(id) { document.getElementById(id).classList.add('hidden'); }
+    function closeModals() {
+      hide('modeOverlay');
+      hide('lobbyOverlay');
+      hide('gameOverlay');
+      hide('legalOverlay');
+    }
+  </script>
+</body>
+</html>
